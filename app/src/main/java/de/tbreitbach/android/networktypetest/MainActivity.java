@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String UNKNOWN_STATE = "UNKNOWN";
+
     private TelephonyManager mTeleManager;
 
     // UI
@@ -25,7 +27,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart(){
         super.onStart();
-        mSubtype.setText(getMobileNetworkType(mTeleManager));
+        String type = "";
+
+        if(mTeleManager.getSimState() == TelephonyManager.SIM_STATE_ABSENT || mTeleManager.getSimState() == TelephonyManager.SIM_STATE_UNKNOWN){
+            type = UNKNOWN_STATE;
+        } else {
+            type = getMobileNetworkType(mTeleManager);
+        }
+        mSubtype.setText(type);
     }
 
     private String getMobileNetworkType(TelephonyManager manager){
@@ -68,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             // Unknown
             case TelephonyManager.NETWORK_TYPE_UNKNOWN:
             default:
-                return "UNKNOWN";
+                return UNKNOWN_STATE;
         }
     }
 }
